@@ -13,24 +13,30 @@ public:
         minute = m;
     }
 
-    double diffInHours(const Time &t) const {
+    double static diffInHours(const Time &startTime, const Time &endTime) {
         // 计算两个时间之间的时间差，单位为小时。
-        return (hour - t.hour) + (minute - t.minute) / 60.0;
+        return (endTime.hour - startTime.hour) + (endTime.minute - startTime.minute) / 60.0;
     }
 
-    int diffInMinutes(const Time &t) const {
+    int static diffInMinutes(const Time &startTime, const Time &endTime) {
         // 计算两个时间之间的时间差，单位为分钟。
-        return (hour - t.hour) * 60 + (minute - t.minute);
+        return (endTime.hour - startTime.hour) * 60 + (endTime.minute - startTime.minute);
     }
 
-    string diffInHHMM(const Time &t) const {
-        int diff_minutes = diffInMinutes(t);
+    string static diffInHHMM(const Time &startTime, const Time &endTime) {
+        // 计算两个时间之间的时间差，返回格式为 hh:mm。
+        // TODO: 尝试处理结果为负的情况。
+        int diff_minutes = diffInMinutes(startTime, endTime);
         int hours = diff_minutes / 60;
-        int minutes = abs(diff_minutes % 60);
+        int minutes = abs(diff_minutes) % 60;
 
         ostringstream oss;
-        oss << setw(2) << setfill('0') << abs(hours) << ":"
-            << setw(2) << setfill('0') << minutes;
+        if (hours < 0) {
+            oss << "-";
+            hours = abs(hours);
+        }
+        oss << setfill('0') << setw(2) << hours << ":"
+            << setfill('0') << setw(2) << minutes;
         return oss.str();
     }
 
@@ -71,19 +77,19 @@ int main() {
     switch (mode) {
         case 1:
             cout << fixed << setprecision(2);
-            cout << "The time interval is " << startTime.diffInHours(endTime) << " hours." << endl;
+            cout << "The time interval is " << Time::diffInHours(startTime, endTime) << " hours." << endl;
             break;
         case 2:
-            cout << "The time interval is " << startTime.diffInMinutes(endTime) << " minutes." << endl;
+            cout << "The time interval is " << Time::diffInMinutes(startTime, endTime) << " minutes." << endl;
             break;
         case 3:
-            cout << "The time interval is " << startTime.diffInHHMM(endTime) << endl;
+            cout << "The time interval is " << Time::diffInHHMM(startTime, endTime) << endl;
             break;
         default:
             cout << "Invalid option selected." << endl;
             break;
     }
-    
+
     system("pause");
     return 0;
 }
