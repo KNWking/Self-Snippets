@@ -23,6 +23,11 @@ public:
         return (endTime.hour - startTime.hour) * 60 + (endTime.minute - startTime.minute);
     }
 
+    int static diffInSeconds(const Time &startTime, const Time &endTime) {
+        // 计算两个时间之间的时间差，单位为分钟。
+        return diffInMinutes(startTime, endTime) * 60;
+    }
+
     string static diffInHHMM(const Time &startTime, const Time &endTime) {
         // 计算两个时间之间的时间差，返回格式为 hh:mm。
         // TODO: 尝试处理结果为负的情况。
@@ -70,7 +75,8 @@ int main() {
     cout << "Please select the output format:" << endl
          << "1: Output in hours;" << endl
          << "2: Output in minutes;" << endl
-         << "3: Output in hh:mm." << endl;
+         << "3: Output in seconds." << endl
+         << "4: Output in hh:mm." << endl;
     int mode = 0;
     cin >> mode;
 
@@ -83,6 +89,9 @@ int main() {
             cout << "The time interval is " << Time::diffInMinutes(startTime, endTime) << " minutes." << endl;
             break;
         case 3:
+            cout << "The time interval is " << Time::diffInSeconds(startTime, endTime) << " seconds." << endl;
+            break;
+        case 4:
             cout << "The time interval is " << Time::diffInHHMM(startTime, endTime) << endl;
             break;
         default:
